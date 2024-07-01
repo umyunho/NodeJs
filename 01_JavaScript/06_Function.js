@@ -106,7 +106,7 @@ const func2 = ( x, y)=>{
 }
 
 //매개변수(전달인수)있고 리턴값이 있는 함수
-const func3 = ( x, y)=>{
+const func3c = ( x, y)=>{
     console.log(`func3 = (x,y) => {return ??;} 매개변수(${x}, ${y})있고 리턴 값 없는 함수`);
     return x+y;
 }
