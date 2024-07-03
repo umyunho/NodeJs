@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <link href="/board.css" rel="stylesheet">
+    <link href="/board.css" rel="stylesheet" />
 </head>
 <body>
-    <form name="join" class="login-form" method="post" id="join-form">
+    <form name="join" id="join-form" class="login-form" action="join" method="post">
         <h2>Join</h2>
         <div class="field">
-            <label>User ID</label><input style="flex:3" type="text" id="userid" name="userid">
-            <input style="flex:1"  type="button" value="ID Check"  id="idCheck()"/>
-            <span id="idok"></span>
-            <input type="hidden" name="reid" >
+            <label>User ID</label>
+            <input style="flex:2" type="text" id="userid" name="userid">
+            <input style="flex:1"  type="button" value="ID Check" id="idcheck"/>
+            <span style="flex:1" id="idok"></span>
+            <input type="hidden" id="reid">
         </div>
         <div class="field"><label>Password</label><input type="password" id="pwd"></div>
-        <div class="field"><label>Retype Pw</label><input type="password" name="pwd_check"></div>
-        <div class="field"><label>name</label><input type="text" id="name"></div>
+        <div class="field"><label>Retype Pw</label><input type="password" id="pwd_check"></div>
+        <div class="field"><label>name</label><input type="text" id="name" ></div>
         <div class="field"><label>Email</label><input type="text" id="email"></div>
         <div class="field"><label>Phone</label><input type="text" id="phone"></div>
         <div class="field"><label id="message"></label></div>
@@ -28,26 +29,28 @@
         </div>
     </form>
     <script type="text/javascript">
-        document.getElementById('idcheck').addEventListener('click',async (e)=>{
+        document.getElementById('idcheck').addEventListener('click' , async (e)=>{
             const userid = document.join.userid.value;
-            if(!userid){return alert('조회할 아이디를 입력하세요');}
+            if( !userid ){ return alert('조회할 아이디를 입력하세요'); }
             try{
-                const result = await axios.post('/members/idcheck',{userid});
+                const result = await axios.post('/members/idcheck', {userid} );
                 const id = result.data.id;
-                if(id=='0'){
-                    document.getElementById('idok').innerHTML='사용가능.';
-                    document.getElementById('reid').innerHTML='ok';
+                if( id == '0'){
+                    document.getElementById('idok').innerHTML = '사용가능';
+                    document.getElementById('idok').style.color = 'blue';
+                    document.getElementById('reid').value = 'ok';
                 }else{
-                    document.getElementById('idok').innerHTML='사용불가능.';
-                    document.getElementById('reid').innerHTML='';
-
+                    document.getElementById('idok').innerHTML = '사용불가능';
+                    document.getElementById('idok').style.color = 'red';
+                    document.getElementById('reid').value = '';
                 }
             }catch(err){
                 console.error(err);
             }
-        })
+        });
 
-        document.getElementById("join-form").addEventListener('submit', async(e)=>{
+
+        document.getElementById("join-form").addEventListener('submit', async (e)=>{
             e.preventDefault();
             const userid = e.target.userid.value;
             const pwd = e.target.pwd.value;
@@ -57,20 +60,20 @@
             const phone = e.target.phone.value;
             const reid = e.target.reid.value;
 
-            if(!userid){return alert('아이디를 입력하세요');}
-            if(!pwd){return alert('비밀번호를 입력하세요');}
-            if(!name){return alert('이름을 입력하세요');}
-            if(!email){return alert('이메일을 입력하세요');}
-            if(!phone){return alert('전화번호를 입력하세요');}
-            if(pwd != pwd_check){return alert('비밀번호 확인이 일치하지않습니다.');}
-            if(!reid){return alert('아이디 중복체크를 진행하세요');}
+            if( !userid ){ return alert('아이디를 입력하세요'); }
+            if( !pwd ){ return alert('비밀번호를 입력하세요'); }
+            if( !name ){ return alert('이름을 입력하세요'); }
+            if( !email ){ return alert('이메일을 입력하세요'); }
+            if( !phone ){ return alert('전화번호를 입력하세요'); }
+            if( pwd != pwd_check ){ return alert('비밀번호 확인이 일치하지 않습니다'); }
+            if( !reid ){ return alert('아이디 중복체크를 진행하세요'); }
 
-            try {
-                const result = await axios.post("/join",{userid,pwd,name,email,phone});
-                alert(result.data.msg);
+            try{
+                const result = await axios.post("/members/join", {userid, pwd, name, email, phone});
+                alert( result.data.msg );
                 location.href='/';
-            } catch (err) {
-                console.error(err)
+            }catch(err){
+                console.error(err);
             }
         });
     </script>
