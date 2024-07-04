@@ -38,10 +38,10 @@ app.use('/boards', boardsRouter);
 
 
 // 에러라우터
-app.use((req, res, next) => {
-    console.log(404);
-    res.send('404 에러입니다');
-});
+// app.use((req, res, next) => {
+//     console.log(req.url + " 404");
+//     res.send('404 에러입니다');
+// });
 app.use((err, req, res, next) => {
     //res.send('서버 에러입니다');
     console.error(err);
