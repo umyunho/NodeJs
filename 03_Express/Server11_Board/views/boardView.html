@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/board.css" />
+  </head>
+  <body>
+    <div id="main_container">
+      <h2>게시글 상세 보기</h2>
+      <div class="board">
+        <div class="field">
+          <div class="label">작성자</div>
+          <div class="text" id="writer"></div>
+        </div>
+        <div class="field">
+          <div class="label">이메일</div>
+          <div class="text" id="email"></div>
+        </div>
+        <div class="field">
+          <div class="label">조회수</div>
+          <div class="text" id="readcount"></div>
+        </div>
+        <div class="field">
+          <div class="label">작성일</div>
+          <div class="text" id="writedate"></div>
+        </div>
+        <div class="field">
+          <div class="label">제목</div>
+          <div class="text" id="title"></div>
+        </div>
+        <div class="field" style="margin-bottom: 15px">
+          <div class="label">내용</div>
+          <div
+            class="text"
+            style="font-size: 140%; flex: 1.5"
+            id="content"
+          ></div>
+          <div class="label" style="flex: 0.5">이미지</div>
+          <div class="text" style="flex: 2" id="image"></div>
+        </div>
+        <div class="login-button">
+          <input type="button" class="btn-login" value="수정" />
+          <input type="button" class="btn-login" value="삭제" />
+          <input
+            type="button"
+            class="btn-login"
+            value="목록"
+            onClick="location.href='/boards/boardlist'"
+          />
+        </div>
+      </div>
+    </div>
+    <script>
+      getBoard();
+
+      async function getBoard() {
+        // 세션에 저장된 게시물 번호로 게시물을 조회하고, 페이지의 id값을 이용해 내용을 표시
+        try {
+          const result = await axios.get("/boards/getBoard");
+          const board = result.data;
+          document.getElementById("writer").innerHTML = board.userid;
+          document.getElementById("email").innerHTML = board.email;
+          document.getElementById("readcount").innerHTML = board.readcount;
+          document.getElementById("writedate").innerHTML = board.writedate.substring(0, 10);
+          document.getElementById("title").innerHTML = board.title;
+          document.getElementById("content").innerHTML ="<pre>" + board.content + "</pre>";
+          if (board.image) {
+            const img = document.createElement("img");
+            img.src = "/img/" + board.savefilename;
+            img.width = "200";
+            document.getElementById("image").append(img);
+          }
+        } catch (err) {}
+      }
+    </script>
+  </body>
+</html>
