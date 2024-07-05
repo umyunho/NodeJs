@@ -129,7 +129,12 @@
                     reply_col.className = 'reply_col';
                     let remove = document.createElement('button');
                     remove.textContent = '삭제'
-                    reply_col.appendChild(remove);
+
+                    if(loginUser.userid == reply.userid){
+                        reply_col.appendChild(remove);
+                    }else{
+                        reply_col.textContent='';
+                    }
                     reply_row.appendChild( reply_col );
 
                     remove.addEventListener('click', async (e)=>{
