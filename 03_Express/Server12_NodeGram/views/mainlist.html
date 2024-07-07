@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/css/gram.css" rel="stylesheet" >
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Document</title>
+    <link rel="stylesheet" href="/css/gram.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="profile-wrap">
             <div class="profile">
-                    <div class="field">
-                        <label><span id="nickname"></span> 님 안녕하세요</label>
-                    </div>
-                    <div class="field" >
-                        <div style="flex:1; font-weight:bold; text-align: center;">팔로워<br />                            
-                        </div>
-                        <div style="flex:1; font-weight:bold;  text-align: center;">팔로잉<br />                 
-                        </div>
-                    </div>
-                    <div class="btns">
-                        <input type="button" value="회원정보상세" onClick="location.href='/user/userdetail'">
-                        <input type="button" value="로그아웃" onClick="location.href='/user/logout'">
-                        <input type="button" value="피드작성" onClick="location.href='/user/feedWriteForm'">
-                    </div>
+                <div class="field">
+                    <label><span id="nickname"></span> 님 안녕하세요</label>
+                </div>
+                <div class="field" >
+                    <div style="flex:1; font-weight:bold; text-align: center;">팔로워<br /></div>
+                    <div style="flex:1; font-weight:bold;  text-align: center;">팔로잉<br /></div>
+                </div>
+                <div class="btns">
+                    <input type="button" value="회원정보상세" onClick="location.href='/user/userdetail'">
+                    <input type="button" value="로그아웃" onClick="location.href='/user/logout'">
+                    <input type="button" value="피드작성" onClick="location.href='/feed/feedWriteForm'">
+                </div>
             </div>
         </div>
 
@@ -32,27 +30,26 @@
 
     </div>
     <script type="text/javascript">
-        getLoginUser();
+        getLoginuser();
         getFeedList();
 
         async function getFeedList(){
-            try {
-                
-            } catch (err) {
+            try{
+
+            }catch(err){
                 console.error(err);
             }
         }
 
-        async function getLoginUser(){
-            try {
+        async function getLoginuser(){
+            try{
                 const result = await axios.get('/user/getLoginUser');
-                const loginUser =result.data;
-                document.getElementById('nockname').innerHTML = loginUser.nickname;
-
-            } catch (err) {
+                const loginUser = result.data;
+                document.getElementById('nickname').innerHTML = loginUser.nickname;
+            }catch(err){
                 console.error(err)
             }
-        };
+        }
     </script>
 </body>
 </html>

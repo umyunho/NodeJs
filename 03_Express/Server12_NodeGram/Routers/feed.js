@@ -1,20 +1,63 @@
 const express = require('express');
-const router = express.Router();
 const path = require('path');
+const router = express.Router();
 
+const fs = require('fs');
+const mysql = require('mysql2/promise');
+const multer = require('multer');
+async function getConnection(){
+    let connection = await mysql.createConnection(
+        {
+            host : 'localhost',
+            user : 'root',
+            password : 'adminuser',
+            database : 'nodegram'
+        }
+    );
+    return connection;
+}
 
+try {
+    fs.readdirSync('uploads');
+} catch (error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+}
 
-router.get('/mainlist',(req,res)=>{
-    res.sendFile(path.join(__dirname,'/..','/views/mainlist.html'));
+const uploadObj = multer({
+    storage: multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads/');
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);
+        done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-router.get('/feedWriterForm',(req,res)=>{
-    res.sendFile(path.join(__dirname, '/..', '/views/feedWriteForm.html'));
+router.post('/imgup', uploadObj.single('img'), (req, res, next)=>{
+    console.log(req.file.filename);
+    console.log(req.file.originalname);
+    res.json( { savefilename:req.file.filename, image:req.file.originalname } );
 });
+
+
+router.get('/mainlist', (req, res)=>{
+    res.sendFile( path.join(__dirname, '/..', '/views/mainlist.html') );
+});
+
+router.get('/feedWriteForm', (req, res)=>{
+    res.sendFile( path.join(__dirname, '/..', '/views/feedWriteForm.html') );
+});
+
+const obj = multer();
 router.post('/writeFeed', obj.single('img'), async (req, res)=>{
     const { content, writer, image, savefilename }=req.body;
     try{
         const connection = await getConnection();
+
         // feed 테이블에 레코드를 추가합니다
         let sql = "insert into feed(content, image, savefilename, writer) values(?,?,?,?)";
         const [result, field] = await connection.query(sql, [content, image, savefilename, writer] );
@@ -51,4 +94,5 @@ router.post('/writeFeed', obj.single('img'), async (req, res)=>{
         next(err);
     }
 });
+
 module.exports = router;
